@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,6 +10,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ChatScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
     );
   }
 }
@@ -42,41 +46,28 @@ class _ChatScreenState extends State<ChatScreen> {
           Positioned(
             bottom: 20,
             right: 20,
-            child: Visibility(
-              visible: !_isChatBoxVisible,
-              child: FloatingActionButton(
-                onPressed: _toggleChatBoxVisibility,
-                child: Icon(Icons.chat),
-              ),
+            child: FloatingActionButton(
+              onPressed: _toggleChatBoxVisibility,
+              child: Icon(Icons.chat),
             ),
           ),
-          Visibility(
-            visible: _isChatBoxVisible,
-            child: Align(
+          if (_isChatBoxVisible)
+            Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: 400,
                 color: Colors.white,
                 child: Column(
                   children: [
-                    ChatBoxHeader(
-                      onClose: _toggleChatBoxVisibility,
-                    ),
+                    ChatBoxHeader(onClose: _toggleChatBoxVisibility),
                     Expanded(child: ChatBoxBody()),
-                    ChatBoxFooter(
-                      onAddExtra: _toggleModalVisibility,
-                    ),
+                    ChatBoxFooter(onAddExtra: _toggleModalVisibility),
                   ],
                 ),
               ),
             ),
-          ),
-          Visibility(
-            visible: _isModalVisible,
-            child: Modal(
-              onClose: _toggleModalVisibility,
-            ),
-          ),
+          if (_isModalVisible)
+            Modal(onClose: _toggleModalVisibility),
         ],
       ),
     );
@@ -100,7 +91,7 @@ class ChatBoxHeader extends StatelessWidget {
             onPressed: onClose,
           ),
           CircleAvatar(
-            backgroundImage: AssetImage('assets/mascota.png'),
+            backgroundImage: NetworkImage('https://fnldigital.com/wp-content/uploads/2024/04/Diseno-sin-titulo-9.png'),
           ),
           SizedBox(width: 8.0),
           Text(
@@ -143,7 +134,7 @@ class ChatBoxBody extends StatelessWidget {
           isUser: false,
           message: '',
           time: '12:00',
-          image: 'assets/Rectangle 1131.jpg',
+          icon: FontAwesomeIcons.fileAlt,
         ),
         ChatMessage(
           isUser: true,
@@ -159,13 +150,13 @@ class ChatMessage extends StatelessWidget {
   final bool isUser;
   final String message;
   final String time;
-  final String? image;
+  final IconData? icon;
 
   ChatMessage({
     required this.isUser,
     required this.message,
     required this.time,
-    this.image,
+    this.icon,
   });
 
   @override
@@ -182,8 +173,8 @@ class ChatMessage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (image != null)
-              Image.asset(image!),
+            if (icon != null)
+              Icon(icon, size: 50.0),
             if (message.isNotEmpty)
               Text(message),
             SizedBox(height: 5.0),
@@ -207,6 +198,11 @@ class ChatBoxFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey[300]!),
+        ),
+      ),
       child: Row(
         children: [
           IconButton(
@@ -256,7 +252,7 @@ class Modal extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Escribe tu mensaje'),
+                      Text('Escribe tu mensaje', style: TextStyle(fontWeight: FontWeight.bold)),
                       IconButton(
                         icon: Icon(Icons.close),
                         onPressed: onClose,
