@@ -16,41 +16,45 @@ class ChatMessage extends StatelessWidget {
     bool isUser1 = userType == 1;
 
     Color messageTextColor = isUser1 ? Colors.white : Colors.black;
-    Color timeTextColor = isUser1 ? Color.fromARGB(255, 203, 203, 203) : Color.fromARGB(255, 119, 119, 119);
+    Color timeTextColor =
+        isUser1 ? Color.fromARGB(255, 203, 203, 203) : Color.fromARGB(255, 119, 119, 119);
+
+    String avatarImage = isUser1 ? 'assets/logo_funcy_scale.png' : 'assets/user_img.jpg';
 
     return Column(
       crossAxisAlignment: isUser1 ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        if (isUser1)
-          Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Text(
-              'You',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+        Padding(
+          padding: isUser1 ? EdgeInsets.only(right: 8.0) : EdgeInsets.only(left: 8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 20.0,
+                backgroundColor: Colors.transparent,
+                child: ClipOval(
+                  child: Image.asset(avatarImage, width: 60, height: 60, fit: BoxFit.cover),
+                ),
               ),
-            ),
-          )
-        else
-          Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Text(
-              'Funcy',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+              SizedBox(width: 6.0),
+              Text(
+                isUser1 ? 'You' : 'Funcy',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+            ],
           ),
+        ),
         Align(
           alignment: isUser1 ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             margin: EdgeInsets.only(
               top: 8.0,
               bottom: 4.0,
-              left: isUser1 ? 80.0 : 4.0,
-              right: isUser1 ? 4.0 : 80.0,
+              left: isUser1 ? 80.0 : 40.0,
+              right: isUser1 ? 40.0 : 80.0,
             ),
             padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
