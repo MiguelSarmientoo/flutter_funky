@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; 
-import 'package:flutter_funky/widgets/chat_message.dart'; 
+import 'package:intl/intl.dart';
+import 'package:flutter_funky/widgets/chat_message.dart';
+import 'package:flutter_funky/widgets/chat_box_footer.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -8,24 +9,76 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<Map<String, dynamic>> messages = []; 
+  List<Map<String, dynamic>> messages = [];
 
   void _sendMessage(String text) {
     setState(() {
       messages.add({
-        'id': UniqueKey().toString(), 
+        'id': UniqueKey().toString(),
         'text': text,
-        'time': DateFormat('HH:mm').format(DateTime.now()), 
-        'isUser': true, 
+        'time': DateFormat('HH:mm').format(DateTime.now()),
+        'isUser': true,
       });
     });
   }
 
+  TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Chat'),
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        title: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('assets/logo_funcy_scale.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Funcy IA',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  'Online',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -33,58 +86,19 @@ class _ChatScreenState extends State<ChatScreen> {
             child: ListView.builder(
               itemCount: messages.length,
               itemBuilder: (context, index) {
+                int userType = messages[index]['userType'] ?? 1; // Por defecto, userType es 1 si no está definido
+
                 return ChatMessage(
                   message: messages[index]['text'],
                   time: messages[index]['time'],
-                  isUser: messages[index]['isUser'],
+                  userType: userType, 
                 );
               },
             ),
           ),
           ChatBoxFooter(
+            textEditingController: _controller,
             onSendMessage: _sendMessage,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ChatBoxFooter extends StatelessWidget {
-  final Function(String) onSendMessage;
-
-  ChatBoxFooter({required this.onSendMessage});
-
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController _controller = TextEditingController();
-
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      color: Colors.grey[200],
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: 'Type your message...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.0),
-          IconButton(
-            icon: Icon(Icons.send),
-            onPressed: () {
-              String message = _controller.text.trim();
-              if (message.isNotEmpty) {
-                onSendMessage(message);
-                _controller.clear();
-              }
-            },
           ),
         ],
       ),

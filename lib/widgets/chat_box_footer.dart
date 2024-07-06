@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChatBoxFooter extends StatelessWidget {
   final TextEditingController textEditingController;
-  final VoidCallback onSendMessage;
+  final Function(String) onSendMessage;
 
   ChatBoxFooter({
     required this.textEditingController,
@@ -12,6 +12,7 @@ class ChatBoxFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       padding: EdgeInsets.all(8.0),
       child: Row(
         children: [
@@ -22,19 +23,30 @@ class ChatBoxFooter extends StatelessWidget {
             },
           ),
           Expanded(
-            child: TextField(
-              controller: textEditingController,
-              decoration: InputDecoration(
-                hintText: 'Enter your message...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10.0), 
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  hintText: 'Write your message...',
+                  border: InputBorder.none,
                 ),
               ),
             ),
           ),
           IconButton(
             icon: Icon(Icons.send),
-            onPressed: onSendMessage,
+            onPressed: () {
+              String message = textEditingController.text.trim();
+              if (message.isNotEmpty) {
+                onSendMessage(message);
+                textEditingController.clear();
+              }
+            },
           ),
         ],
       ),
