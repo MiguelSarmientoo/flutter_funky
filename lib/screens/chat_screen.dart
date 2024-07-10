@@ -86,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: ListView.builder(
               itemCount: messages.length,
               itemBuilder: (context, index) {
-                int userType = messages[index]['userType'] ?? 1; // Por defecto, userType es 1 si no está definido
+                int userType = messages[index]['userType'] ?? 2; // Por defecto, userType es 1 si no está definido
 
                 return ChatMessage(
                   message: messages[index]['text'],
